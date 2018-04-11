@@ -1,4 +1,4 @@
-# Code&Work - this project is a web site, that will help both programmers and IT companies work with each other.
+# Code&Work - this project is a web site, that will help both programmers and IT companies to work with each other.
 Providing the ability companies to create tasks for programmers to cope with, this project would help programmers to find a job and companies to get new good employees. Managing tasks from created tests, programmers can enter into the raiting list of the best participants of the test so companies can contact them and get information about a future worker.
 
 AIMS:
