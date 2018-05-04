@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Autofac;
 using Project.Domain.Services.UserField;
 using Project.Domain.Services.CompanyField;
+using Project.Domain;
 
 namespace Project.WebApi
 {
@@ -28,10 +29,19 @@ namespace Project.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string assemblyName = typeof(ModelContext).Namespace;
             services.AddMvc();
             services.AddDbContext<ModelContext>(options =>
-    options.UseSqlite(Configuration.GetConnectionString("DemoContext")));
-
+                options.UseSqlite(Configuration.GetConnectionString("DemoContext")
+                ));
+            //services.AddDbContext<ModelContext>(options =>
+            //{
+            //    options.UseSqlite(Configuration.GetConnectionString("DemoContext"),
+            //        optionsBuilder =>
+            //        {
+            //            optionsBuilder.MigrationsAssembly(assemblyName);
+            //        });
+            //});
         }
 
         // Configure Autofac. Called after ConfigureServices()
@@ -42,14 +52,24 @@ namespace Project.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ModelContext dbContext)
         {
+            app.UseCors(cfg =>
+            {
+                cfg.AllowAnyHeader();
+                cfg.AllowAnyMethod();
+                cfg.AllowAnyOrigin();
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            SeedData.Initialize(dbContext);
 
             app.UseMvc();
+
+            //dbContext.Database.EnsureExist
         }
     }
 }

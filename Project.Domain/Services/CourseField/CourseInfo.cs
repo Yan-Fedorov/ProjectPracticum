@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Project.Domain
+namespace Project.Domain.Services.CourseField
 {
-    public class Course:DtoBase
+    public class CourseInfo
     {
         public string Name { get; set; }
         public DateTime StartTime { get; set; }
@@ -12,8 +12,5 @@ namespace Project.Domain
         public string Vacancy { get; set; }
         public int PeopleLimit { get; set; }
         public ICollection<Task> Tasks { get; set; }
-
-
-
     }
 }

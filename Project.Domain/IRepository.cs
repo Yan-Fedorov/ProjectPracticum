@@ -4,13 +4,13 @@ using System.Text;
 
 namespace Project.Domain
 {
-    public interface IRepository<T>
+    public interface IRepository<T,Y>
     {
-        IEnumerable<T> GetBookList(); // получение всех объектов
-        List<T> GetElements(); // получение одного объекта по id
-        void Create(T item); // создание объекта
-        void Update(T item); // обновление объекта
-        void Delete(int id); // удаление объекта по id
-        void Save();
+        //T Create(Y data);
+        IEnumerable<T> GetItemsList(); // получение всех объектов
+        T GetElementById(Guid id); // получение одного объекта по id
+        T Add(Y item); // добавление объекта
+        void Update(Guid id, Y item); // обновление объекта
+        void Delete(Guid id); // удаление объекта по id
     }
 }

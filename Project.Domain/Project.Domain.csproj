@@ -5,8 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\CourseField\" />
-    <Folder Include="Services\TaskField\" />
+    <Compile Remove="Model\Migrations\20180407125738_test.cs" />
+    <Compile Remove="Model\Migrations\20180425125249_Add Entities.cs" />
+    <Compile Remove="Model\Migrations\20180425182926_addEntities.cs" />
+    <Compile Remove="Model\Migrations\20180425183204_removeKeyHack.cs" />
   </ItemGroup>
 
   <ItemGroup>

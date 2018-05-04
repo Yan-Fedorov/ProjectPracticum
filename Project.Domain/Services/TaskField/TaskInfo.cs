@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Project.Domain
+namespace Project.Domain.Services.TaskField
 {
-    public class Task : DtoBase
+    public class TaskInfo
     {
         public string Info { get; set; }
         public int Points { get; set; }

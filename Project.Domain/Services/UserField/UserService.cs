@@ -3,60 +3,67 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Project.Domain.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project.Domain.Services.UserField
 {
-    public class UserService : IRepository<UserInfo>
+    public class UserService : IRepository<User,UserInfo>
     {
-        private readonly ModelContext _context;
+        private readonly ModelContext _modelContext;
         public UserService(ModelContext context)
         {
-            _context = context;
+            _modelContext = context;
         }
-        public void Create(UserInfo item)
+        private User Create(UserInfo item)
         {
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Name = item.UserName,
-                Password = item.UserPassword,
-                Email = item.UserEmail            
+                Name = item.Name,
+                Password = item.Password,
+                Email = item.Email,
+                CompletedTasks = item.CompletedTasks,
+                Info = item.Info,
+                Notifications = item.Notifications
             };
-            _context.Users.Add(user);
-            _context.SaveChanges();           
-        }
-      
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
+            return user;
         }
 
-        public IEnumerable<UserInfo> GetBookList()
+        public User Add(UserInfo newUser)
         {
-            throw new NotImplementedException();
+            User user = Create(newUser);
+            _modelContext.Users.Add(user);
+            _modelContext.SaveChanges();
+            return user;
         }
 
-        public List<UserInfo> GetElements()
+        public void Delete(Guid id)
         {
-            return _context.Users.Select(x => new UserInfo
-            {
-                UserId = x.Id,
-                UserName = x.Name,
-                UserPassword = x.Password,
-                UserEmail = x.Email
-            }).ToList();
-            
-        }
-       
-        public void Save()
-        {
-            throw new NotImplementedException();
+            User user = _modelContext.Users.FirstOrDefault(x => x.Id == id);
+            _modelContext.Users.Remove(user);
+            _modelContext.SaveChanges();
         }
 
-        public void Update(UserInfo item)
+        public IEnumerable<User> GetItemsList()
         {
-            throw new NotImplementedException();
+            return _modelContext.Users.ToList();
+        }
+
+        public User GetElementById(Guid id)
+        {
+            return _modelContext.Users
+                .Where(x => x.Id == id)
+                .Include(x => x.Notifications)
+                .FirstOrDefault();
+        }
+
+        public void Update(Guid id, UserInfo item)
+        {
+            var originalUser = _modelContext.Users.
+                FirstOrDefault(o => o.Id == id);
+            _modelContext.Entry(originalUser).CurrentValues.SetValues(item);
+
+            _modelContext.SaveChanges();
         }
     }
 }

@@ -1,45 +1,69 @@
-﻿using Project.Domain.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.Domain.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Project.Domain.Services.CompanyField
 {
-    public class CompanyService : IRepository<CompanyInfo>
+    public class CompanyService : IRepository<Company, CompanyInfo>
     {
-        private readonly ModelContext _context;
+        private readonly ModelContext _modelContext;
         public CompanyService(ModelContext context)
         {
-            _context = context;
+            _modelContext = context;
         }
-        public void Create(CompanyInfo item)
+        private Company Create(CompanyInfo data)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<CompanyInfo> GetBookList()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<CompanyInfo> GetElements()
-        {
-            throw new NotImplementedException();
+            var company = new Company
+            {
+                Id = new Guid(),
+                Name = data.Name,
+                Courses = data.Courses,
+                Contacts = data.Contacts,
+                Info = data.Info,
+                Password = data.Password,
+                Notifications = data.Notifications
+            };
+            return company;
         }
 
-        public void Save()
+        public Company Add(CompanyInfo newCompany)
         {
-            throw new NotImplementedException();
+            Company company = Create(newCompany);
+            _modelContext.Companies.Add(company);
+            _modelContext.SaveChanges();
+            return company;
         }
 
-        public void Update(CompanyInfo item)
+        public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            Company company = _modelContext.Companies.FirstOrDefault(x => x.Id == id);
+            _modelContext.Companies.Remove(company);
+            _modelContext.SaveChanges();
+        }
+
+        public IEnumerable<Company> GetItemsList()
+        {
+            return _modelContext.Companies.ToList();
+        }
+
+        public Company GetElementById(Guid id)
+        {
+            return _modelContext.Companies
+                .Where(x => x.Id == id)
+                .Include(x => x.Notifications)
+                .FirstOrDefault();
+        }
+
+        public void Update(Guid id, CompanyInfo item)
+        {
+            var originalCompany = _modelContext.Companies.
+                FirstOrDefault(o => o.Id == id);
+            _modelContext.Entry(originalCompany).CurrentValues.SetValues(item);
+
+            _modelContext.SaveChanges();
         }
     }
 }
