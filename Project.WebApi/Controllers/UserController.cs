@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Project.Domain.Services.UserField;
 using System;
 using System.Collections.Generic;
@@ -15,28 +16,8 @@ namespace Project.WebApi.Controllers
         {
             _userService = userService;
         }
-        [HttpGet]
-        public object Get()
-        {
-            return _userService.GetItemsList();
-        }
-        [HttpGet("{id}")]
-        public object GetById(Guid id)
-        {
-            return _userService.GetElementById(id);
-        }
-        [HttpPost("{id}")]
-        public IActionResult Update(Guid id, [FromBody]UserInfo item)
-        {
-            if (ModelState.IsValid)
-            {
-                _userService.Update(id, item);
-                return Ok(item);
-            }
-            return BadRequest(ModelState);
-        }
         [HttpPost]
-        public IActionResult Add([FromBody]UserInfo item)
+        public object Add([FromBody]UserInfo item)
         {
             if (ModelState.IsValid)
             {
@@ -44,7 +25,36 @@ namespace Project.WebApi.Controllers
                 return Ok(dbCompany);
             }
             return BadRequest(ModelState);
+        } 
+
+        [HttpGet]
+        public object Get()
+        {
+            return _userService.GetItemsList();
         }
+
+        
+
+        [HttpGet("{id}")]
+        public object GetById(Guid id)
+        {
+            
+            return _userService.GetElementById(id);
+        }
+        [Authorize]
+        [HttpPost("{id}")]
+        public object Update(Guid id, [FromBody]UserInfo item)
+        {
+            var userId = User.GetUserId();
+
+            if (ModelState.IsValid)
+            {
+                _userService.Update(id, item);
+                return Ok(item);
+            }
+            return BadRequest(ModelState);
+        }
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
@@ -55,6 +65,32 @@ namespace Project.WebApi.Controllers
                 return Ok();
             }
             return BadRequest(ModelState);
+        }
+
+
+        public void Test()
+        {
+            var st = 10;
+            var obj = new TeC
+            {
+                Num = 10,
+                St = "23"
+            };
+            Mod(st, obj);
+        }
+
+        public void Mod(int inSt, TeC o)
+        {
+            inSt = 202;
+
+            o.St = "20";
+            o.Num = 2;
+        }
+
+        public class TeC
+        {
+            public int Num { get; set; }
+            public string St { get; set; }
         }
     }
 }

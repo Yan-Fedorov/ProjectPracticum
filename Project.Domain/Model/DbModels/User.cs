@@ -15,6 +15,7 @@ namespace Project.Domain
         public string Info { get; set; }
         public ICollection<CompletedTask> CompletedTasks { get; set; }
         public virtual ICollection<UserAndNotification> Notifications { get; set; }
+        public virtual ICollection<UserAndCourses> Courses { get; set; }
 
     }
 }

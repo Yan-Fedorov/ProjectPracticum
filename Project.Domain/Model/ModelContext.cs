@@ -18,6 +18,7 @@ namespace Project.Domain
         DbSet<CompanyNotification> CompanyNotifications { get; set; }
         DbSet<Company_Notification> Company_Notifications { get; set; }
         DbSet<UserAndNotification> CompanyAndNotifications { get; set; }
+        DbSet<UserAndCourses> UserAndCourses { get; set; }
 
     }
     public class ModelContext: DbContext
@@ -31,6 +32,7 @@ namespace Project.Domain
         public DbSet<CompanyNotification> CompanyNotifications { get; set; }
         public DbSet<Company_Notification> Company_Notifications { get; set; }
         public DbSet<UserAndNotification> CompanyAndNotifications { get; set; }
+        public DbSet<UserAndCourses> UserAndCourses { get; set; }
 
         public ModelContext(DbContextOptions<ModelContext> options) : base(options) { }
         //protected override void OnModelCreating(DbModelBuilder modelBuilder)

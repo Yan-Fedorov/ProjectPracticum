@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Project.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

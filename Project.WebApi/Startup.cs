@@ -8,12 +8,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Project.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Autofac;
 using Project.Domain.Services.UserField;
 using Project.Domain.Services.CompanyField;
 using Project.Domain;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Project.Domain.Services.TaskField;
+using Project.Domain.Services.CourseField;
+using Project.Domain.Services.UserAndCoursesField;
+using Project.Domain.Services.UserNotificationField;
+using Project.Domain.Services.CompanyNotificationField;
+using Project.Domain.Services.CompletedTaskField;
 
 namespace Project.WebApi
 {
@@ -34,14 +43,31 @@ namespace Project.WebApi
             services.AddDbContext<ModelContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DemoContext")
                 ));
-            //services.AddDbContext<ModelContext>(options =>
-            //{
-            //    options.UseSqlite(Configuration.GetConnectionString("DemoContext"),
-            //        optionsBuilder =>
-            //        {
-            //            optionsBuilder.MigrationsAssembly(assemblyName);
-            //        });
-            //});
+            services.AddCors();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = AuthOptions.ISSUER,
+
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = AuthOptions.AUDIENCE,
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,
+
+                            // установка ключа безопасности
+                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true,
+                        };
+                    });
         }
 
         // Configure Autofac. Called after ConfigureServices()
@@ -49,6 +75,12 @@ namespace Project.WebApi
         {
             builder.RegisterType<UserService>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<CompanyService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<TaskService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<CourseService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<UserAndCoursesService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<UserNotificationService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<CompanyNotificationService>().AsImplementedInterfaces().AsSelf();
+            builder.RegisterType<CompletedTaskService>().AsImplementedInterfaces().AsSelf();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,10 +98,15 @@ namespace Project.WebApi
                 app.UseDeveloperExceptionPage();
             }
             SeedData.Initialize(dbContext);
-
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseMvc();
+           
 
             //dbContext.Database.EnsureExist
+            //OWIN AUTH
         }
+        
     }
 }

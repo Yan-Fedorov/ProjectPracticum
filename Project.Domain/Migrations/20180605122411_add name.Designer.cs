@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Project.Domain;
 using System;
 
-namespace Project.Domain.Model.Migrations
+namespace Project.Domain.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20180425183513_reinit")]
-    partial class reinit
+    [Migration("20180605122411_add name")]
+    partial class addname
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,6 +127,8 @@ namespace Project.Domain.Model.Migrations
 
                     b.Property<string>("Info");
 
+                    b.Property<string>("Name");
+
                     b.Property<int>("Points");
 
                     b.HasKey("Id");
@@ -152,6 +154,24 @@ namespace Project.Domain.Model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Project.Domain.UserAndCourses", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("CourseId");
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAndCourses");
                 });
 
             modelBuilder.Entity("Project.Domain.UserAndNotification", b =>
@@ -217,9 +237,20 @@ namespace Project.Domain.Model.Migrations
 
             modelBuilder.Entity("Project.Domain.Task", b =>
                 {
-                    b.HasOne("Project.Domain.Course")
+                    b.HasOne("Project.Domain.Course", "Course")
                         .WithMany("Tasks")
                         .HasForeignKey("CourseId");
+                });
+
+            modelBuilder.Entity("Project.Domain.UserAndCourses", b =>
+                {
+                    b.HasOne("Project.Domain.Course", "Course")
+                        .WithMany("Users")
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("Project.Domain.User", "User")
+                        .WithMany("Courses")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Project.Domain.UserAndNotification", b =>

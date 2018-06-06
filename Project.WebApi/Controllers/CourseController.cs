@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Project.Domain.Services.CourseField;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace Project.WebApi.Controllers
 {
     [Route("api/[controller]")]
+    //[Authorize]
     public class CourseController: Controller
     {
         private readonly CourseService _courseService;
@@ -25,6 +27,14 @@ namespace Project.WebApi.Controllers
         {
             return _courseService.GetElementById(id);
         }
+
+        //[HttpGet("forUser")]
+        //public object GetUsers()
+        //{
+        //    return _courseService.GetUserCourses(User.GetUserId());
+        //}
+
+
         [HttpPost("{id}")]
         public IActionResult Update(Guid id, [FromBody]CourseInfo item)
         {

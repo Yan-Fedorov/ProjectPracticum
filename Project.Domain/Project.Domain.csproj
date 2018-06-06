@@ -5,15 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180604175324_add course to task.cs" />
+    <Compile Remove="Model\Migrations\20180407124558_Init.cs" />
     <Compile Remove="Model\Migrations\20180407125738_test.cs" />
     <Compile Remove="Model\Migrations\20180425125249_Add Entities.cs" />
     <Compile Remove="Model\Migrations\20180425182926_addEntities.cs" />
     <Compile Remove="Model\Migrations\20180425183204_removeKeyHack.cs" />
+    <Compile Remove="Model\Migrations\20180425183513_reinit.cs" />
+    <Compile Remove="Model\Migrations\20180528165727_add user courses.cs" />
+    <Compile Remove="Model\Migrations\20180528192138_add user courses.cs" />
+    <Compile Remove="Model\Migrations\20180531093846_UserAndCourses Add.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Core">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.core\2.0.3\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\Migrations\" />
   </ItemGroup>
 
 </Project>

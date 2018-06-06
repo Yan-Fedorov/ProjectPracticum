@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Project.Domain.Services.TaskField;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Project.WebApi.Controllers
         {
             return _taskService.GetElementById(id);
         }
+        [Authorize]
         [HttpPost("{id}")]
         public IActionResult Update(Guid id, [FromBody]TaskInfo item)
         {
@@ -45,6 +47,7 @@ namespace Project.WebApi.Controllers
             }
             return BadRequest(ModelState);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

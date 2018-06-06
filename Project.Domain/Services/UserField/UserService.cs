@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Project.Domain.Model;
+//using Project.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Project.Domain.Services.UserField
@@ -28,7 +28,6 @@ namespace Project.Domain.Services.UserField
             };
             return user;
         }
-
         public User Add(UserInfo newUser)
         {
             User user = Create(newUser);
@@ -64,6 +63,11 @@ namespace Project.Domain.Services.UserField
             _modelContext.Entry(originalUser).CurrentValues.SetValues(item);
 
             _modelContext.SaveChanges();
+        }
+        public User FindByPasswordEmail(string password, string email)
+        {
+            User person = _modelContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
+                return person;
         }
     }
 }

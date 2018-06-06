@@ -51,16 +51,31 @@ namespace Project.Domain.Services.CourseField
         public Course GetElementById(Guid id)
         {
             return _modelContext.Courses
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id).Select(x => new Course
+                {
+                    Id = x.Id,
+                    PeopleLimit = x.PeopleLimit,
+                    Name = x.Name,
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    Tasks = _modelContext.Tasks.Where(t => t.Course.Id == x.Id).ToList()
+                })
                 .FirstOrDefault();
         }
 
-        public void Update(Guid id, CourseInfo item)
+    public void Update(Guid id, CourseInfo item)
         {
             var originalCourse = _modelContext.Courses.
                 FirstOrDefault(o => o.Id == id);
             _modelContext.Entry(originalCourse).CurrentValues.SetValues(item);
             _modelContext.SaveChanges();
         }
+
+        //public IEnumerable<Course> GetUserCourses(Guid userId)
+        //{
+        //    return _modelContext.Users
+        //        .First(x => x.Id == userId)
+        //        .Courses;
+        //} 
     }
 }

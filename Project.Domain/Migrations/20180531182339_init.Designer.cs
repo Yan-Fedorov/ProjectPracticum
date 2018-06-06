@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Project.Domain;
 using System;
 
-namespace Project.Domain.Model.Migrations
+namespace Project.Domain.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    partial class ModelContextModelSnapshot : ModelSnapshot
+    [Migration("20180531182339_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,6 +154,24 @@ namespace Project.Domain.Model.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Project.Domain.UserAndCourses", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("CourseId");
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAndCourses");
+                });
+
             modelBuilder.Entity("Project.Domain.UserAndNotification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -219,6 +238,17 @@ namespace Project.Domain.Model.Migrations
                     b.HasOne("Project.Domain.Course")
                         .WithMany("Tasks")
                         .HasForeignKey("CourseId");
+                });
+
+            modelBuilder.Entity("Project.Domain.UserAndCourses", b =>
+                {
+                    b.HasOne("Project.Domain.Course", "Course")
+                        .WithMany("Users")
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("Project.Domain.User", "User")
+                        .WithMany("Courses")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Project.Domain.UserAndNotification", b =>

@@ -9,5 +9,8 @@ namespace Project.Domain
         public string Info { get; set; }
         public int Points { get; set; }
         public string Answers { get; set; }
+        public Course Course { get; set; }
+        public string Name { get; set; }
+
     }
 }

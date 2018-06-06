@@ -12,8 +12,7 @@ namespace Project.Domain
         public string Vacancy { get; set; }
         public int PeopleLimit { get; set; }
         public ICollection<Task> Tasks { get; set; }
-
-
+        public virtual ICollection<UserAndCourses> Users { get; set; }
 
     }
 }
