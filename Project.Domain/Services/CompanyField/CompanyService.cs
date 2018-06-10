@@ -52,8 +52,9 @@ namespace Project.Domain.Services.CompanyField
         public Company GetElementById(Guid id)
         {
             return _modelContext.Companies
-                .Where(x => x.Id == id)
                 .Include(x => x.Notifications)
+                .Include(x => x.Courses)
+                .Where(x => x.Id == id)
                 .FirstOrDefault();
         }
 
@@ -62,8 +63,12 @@ namespace Project.Domain.Services.CompanyField
             var originalCompany = _modelContext.Companies.
                 FirstOrDefault(o => o.Id == id);
             _modelContext.Entry(originalCompany).CurrentValues.SetValues(item);
-
             _modelContext.SaveChanges();
+        }
+        public Guid FindByPasswordEmail(string password, string name)
+        {
+            Company company = _modelContext.Companies.FirstOrDefault(x => x.Name == name && x.Password == password);
+            return company.Id;
         }
     }
 }

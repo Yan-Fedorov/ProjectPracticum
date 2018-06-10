@@ -61,5 +61,14 @@ namespace Project.Domain.Services.TaskField
             _modelContext.Entry(originalTask).CurrentValues.SetValues(item);
             _modelContext.SaveChanges();
         }
+        public Task AddToCourse(TaskInfo newTask, Guid courseId)
+        {
+            Task task = Create(newTask);
+            _modelContext.Tasks.Add(task);
+            var course = _modelContext.Courses.Include(x => x.Tasks).FirstOrDefault(x => x.Id == courseId);
+            course.Tasks.Add(task);
+            _modelContext.SaveChanges();
+            return task;
+        }
     }
 }

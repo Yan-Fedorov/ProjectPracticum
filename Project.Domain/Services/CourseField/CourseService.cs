@@ -35,6 +35,15 @@ namespace Project.Domain.Services.CourseField
             _modelContext.SaveChanges();
             return course;
         }
+        public Course AddToCompany(CourseInfo newCourse, Guid companyId)
+        {
+            Course course = Create(newCourse);
+            _modelContext.Courses.Add(course);
+            var company = _modelContext.Companies.FirstOrDefault(x => x.Id == companyId);
+            company.Courses.Add(course);
+            _modelContext.SaveChanges();
+            return course;
+        }
 
         public void Delete(Guid id)
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Project.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    
     public class CourseController: Controller
     {
         private readonly CourseService _courseService;
@@ -36,6 +36,7 @@ namespace Project.WebApi.Controllers
 
 
         [HttpPost("{id}")]
+        [Authorize]
         public IActionResult Update(Guid id, [FromBody]CourseInfo item)
         {
             if (ModelState.IsValid)
@@ -45,7 +46,21 @@ namespace Project.WebApi.Controllers
             }
             return BadRequest(ModelState);
         }
+        [Authorize]
+        [Route("addToCompany")]
         [HttpPost]
+        public IActionResult AddToCompany([FromBody]CourseInfo item)
+        {
+            var companyId = User.GetUserId();
+            if (ModelState.IsValid)
+            {
+                _courseService.AddToCompany(item, companyId);
+                return Ok(item);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost]
+        [Authorize]
         public IActionResult Add([FromBody]CourseInfo item)
         {
             if (ModelState.IsValid)
@@ -55,6 +70,7 @@ namespace Project.WebApi.Controllers
             }
             return BadRequest(ModelState);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {

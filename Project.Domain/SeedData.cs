@@ -150,6 +150,14 @@ namespace Project.Domain
                         Name = "Nure",
                         Contacts = "nure@nure.com",
                         Info = "InfoNure"
+                    }, new Company
+                    {
+                        Id = new Guid(),
+                        Name = "1",
+                        Contacts = "nure@nure.com",
+                        Info = "InfoNure",
+                        Password = "1",
+                        Courses = new List<Course>() { course1 }
                     });
             }
             _modelContext.SaveChanges();

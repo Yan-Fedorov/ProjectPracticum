@@ -64,10 +64,10 @@ namespace Project.Domain.Services.UserField
 
             _modelContext.SaveChanges();
         }
-        public User FindByPasswordEmail(string password, string email)
+        public Guid FindByPasswordEmail(string password, string email)
         {
             User person = _modelContext.Users.FirstOrDefault(x => x.Email == email && x.Password == password);
-                return person;
+                return person.Id;
         }
     }
 }

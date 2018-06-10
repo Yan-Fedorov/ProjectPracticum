@@ -26,27 +26,27 @@ namespace Project.WebApi.Controllers
         {
             return _taskService.GetElementById(id);
         }
-        [Authorize]
-        [HttpPost("{id}")]
-        public IActionResult Update(Guid id, [FromBody]TaskInfo item)
-        {
-            if (ModelState.IsValid)
-            {
-                _taskService.Update(id, item);
-                return Ok(item);
-            }
-            return BadRequest(ModelState);
-        }
-        [HttpPost]
-        public IActionResult Add([FromBody]TaskInfo item)
-        {
-            if (ModelState.IsValid)
-            {
-                var dbCompany = _taskService.Add(item);
-                return Ok(dbCompany);
-            }
-            return BadRequest(ModelState);
-        }
+        //[Authorize]
+        //[HttpPost("{id}")]
+        //public IActionResult Update(Guid id, [FromBody]TaskInfo item)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _taskService.Update(id, item);
+        //        return Ok(item);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+        //[HttpPost]
+        //public IActionResult Add([FromBody]TaskInfo item)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var dbCompany = _taskService.Add(item);
+        //        return Ok(dbCompany);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
         [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
@@ -56,6 +56,17 @@ namespace Project.WebApi.Controllers
             {
                 _taskService.Delete(id);
                 return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+        [Authorize]
+        [HttpPost("{courseId}")]
+        public IActionResult AddToCourse(Guid courseId, [FromBody]TaskInfo item)
+        {
+            if (ModelState.IsValid)
+            {
+                var dbCompany = _taskService.AddToCourse(item, courseId);
+                return Ok(dbCompany);
             }
             return BadRequest(ModelState);
         }

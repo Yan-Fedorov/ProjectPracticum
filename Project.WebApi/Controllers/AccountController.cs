@@ -12,6 +12,8 @@ using Project.Domain.Services.UserField;
 using Project.Domain;
 using Project.WebApi;
 using Microsoft.AspNetCore.Authorization;
+using Project.Domain.Services.CompanyField;
+using Project.Domain.Model.DbModels;
 
 namespace TokenApp.Controllers
 {
@@ -19,9 +21,11 @@ namespace TokenApp.Controllers
     public class AccountController : Controller
     {
         private readonly UserService _userService;
-        public AccountController(UserService userService)
+        private readonly CompanyService _companyService;
+        public AccountController(UserService userService, CompanyService companyService)
         {
             _userService = userService;
+            _companyService = companyService;
         }
 
 
@@ -44,8 +48,11 @@ namespace TokenApp.Controllers
         {
             var email = Request.Form["email"];
             var password = Request.Form["password"];
-
-            var identity = GetIdentity(email, password);
+            var name = Request.Form["name"];
+            string identifier = email;
+            string role = "user";
+            if (email.Count < 1) { identifier = name; role = "company"; }
+            var identity = GetIdentity(identifier, password, role);
             if (identity == null)
             {
                 Response.StatusCode = 400;
@@ -75,15 +82,20 @@ signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey()
             await Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented }));
         }
 
-        private ClaimsIdentity GetIdentity(string username, string password)
+        private ClaimsIdentity GetIdentity(string identifier, string password, string role)
         {
-            var person = _userService.FindByPasswordEmail(password, username);
-            if (person != null)
+            Member member = new Member();
+            if (role == "user")
+            {
+                member.Id = _userService.FindByPasswordEmail(password, identifier);
+            }
+            else  member.Id = _companyService.FindByPasswordEmail(password, identifier);
+            if (member != null)
             {
                 var claims = new List<Claim>
 {
-new Claim(ClaimsIdentity.DefaultNameClaimType, person.Id.ToString()),
-new Claim(ClaimsIdentity.DefaultRoleClaimType, "user")
+new Claim(ClaimsIdentity.DefaultNameClaimType, member.Id.ToString()),
+new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
 };
                 ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,

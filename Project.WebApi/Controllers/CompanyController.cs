@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Project.Domain.Services.CompanyField;
 using Project.Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project.WebApi.Controllers
 {
@@ -26,6 +27,7 @@ namespace Project.WebApi.Controllers
         {
             return _companyService.GetElementById(id);
         }
+        [Authorize]
         [HttpPost("{id}")]
         public IActionResult Update(Guid id, [FromBody]CompanyInfo company)
         {
